@@ -1,0 +1,48 @@
+BootStrap: docker
+From: tensorflow/tensorflow:2.1.0-gpu-py3
+
+%files
+    # mjkey.txt is necessary for the initial build of mujoco_py.
+    # Later, this key will be removed so that nobody accidentally
+    # uploads the key to the Singularity hub.
+    ./mjkey.txt /opt/mjkey.txt
+
+%runscript
+    # Run command through entry point.
+    /opt/mujoco-py/vendor/Xdummy-entrypoint "$@"
+
+%environment
+    export LANG=C.UTF-8
+    export LD_LIBRARY_PATH=/opt/mujoco200/bin:${LD_LIBRARY_PATH}
+    export LD_LIBRARY_PATH=/usr/local/nvidia/lib64:${LD_LIBRARY_PATH}
+    export MUJOCO_PY_MUJOCO_PATH=/opt/mujoco200
+    export MUJOCO_PY_MJKEY_PATH=$HOME/.mujoco/mjkey.txt
+
+%post
+    export WORKDIR=/opt
+    export LD_LIBRARY_PATH=/opt/mujoco200/bin:${LD_LIBRARY_PATH}
+    export MUJOCO_PY_MUJOCO_PATH=$WORKDIR/mujoco200
+    export MUJOCO_PY_MJKEY_PATH=$WORKDIR/.mujoco/mjkey.txt
+
+    apt-get update -q && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        git \
+        net-tools \
+        software-properties-common \
+        unzip \
+        wget \
+        vim
+
+    # --- Clone a forked mujoco-py ---
+    git clone https://github.com/tadashiK/mujoco-py.git $WORKDIR/mujoco-py
+
+    # --- Install mujoco-py ---
+    bash $WORKDIR/mujoco-py/singularity/installer.sh $WORKDIR
+    python3 -m pip install gym
+
+    # --- Cleaning up ---
+    apt-get clean
+    rm -rf /var/lib/apt/lists/*
+
+    # --- Entry point ---
+    chmod +x $WORKDIR/mujoco-py/vendor/Xdummy-entrypoint
