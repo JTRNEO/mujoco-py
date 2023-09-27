@@ -4,4 +4,5 @@ numpy>=1.19.5
 Cython==3.0.0a10
 imageio>=2.1.2
 cffi>=1.10
+docutils<0.19
 fasteners~=0.15
