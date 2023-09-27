@@ -30,7 +30,6 @@ cp $1/mujoco-py/vendor/10_nvidia.json /usr/share/glvnd/egl_vendor.d/10_nvidia.js
 
 cd $1/mujoco-py && python3 -m pip install --no-cache-dir -r requirements.txt
 cd $1/mujoco-py && python3 -m  pip install --no-cache-dir -r requirements.dev.txt
-cd $1/mujoco-py && python3 setup.py build install
+# cd $1/mujoco-py && python3 setup.py build install
 
-rm $1/mjkey.txt  # Don't need the key anymore.
-~                                             
+rm $1/mjkey.txt  # Don't need the key anymore
