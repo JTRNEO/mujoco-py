@@ -11,12 +11,11 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
 
 # --- Installing MuJoCo ---
 cd /opt
-wget https://www.roboti.us/download/mujoco200_linux.zip -O $1/mujoco.zip
-unzip $1/mujoco.zip -d $1
-rm $1/mujoco.zip
+wget https://mujoco.org/download/mujoco210-linux-x86_64.tar.gz -O $1/mujoco.tar.gz
+tar -xf mujoco.tar.gz
+rm $1/mujoco.tar.gz
 
-mv $1/mujoco200_linux $1/mujoco200
-cp $1/mujoco200/bin/*.so /usr/local/lib/
+cp $1/mujoco210/bin/*.so /usr/local/lib/
 
 # --- Installing PatchELF ---
 cp $1/mujoco-py/vendor/patchelf_0.9_amd64.elf /usr/local/bin/patchelf
@@ -34,3 +33,4 @@ cd $1/mujoco-py && python3 -m  pip install --no-cache-dir -r requirements.dev.tx
 cd $1/mujoco-py && python3 setup.py build install
 
 rm $1/mjkey.txt  # Don't need the key anymore.
+~                                             
